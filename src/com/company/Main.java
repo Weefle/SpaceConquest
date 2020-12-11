@@ -15,7 +15,8 @@ import javax.swing.JPanel;
 
 public class Main extends JPanel{
 
-    private final int WIDTH = 50;
+    private static final int WIDTH = 50;
+    private static final int LENGTH = 10;
     private Deque<SnakePart> snake = new ArrayDeque<>();
     private Point apple = new Point(0,0);
     private Random rand = new Random();
@@ -49,7 +50,7 @@ public class Main extends JPanel{
             }
         });
         frame.setContentPane(panel);
-        frame.setSize(13*50, 13*50);
+        frame.setSize(LENGTH*WIDTH, LENGTH*WIDTH);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -80,8 +81,8 @@ public class Main extends JPanel{
     public void createApple() {
         boolean positionAvailable;
         do {
-            apple.x = rand.nextInt(12);
-            apple.y = rand.nextInt(12);
+            apple.x = rand.nextInt(LENGTH-1);
+            apple.y = rand.nextInt(LENGTH-1);
             positionAvailable = true;
             for(SnakePart p : snake) {
                 if(p.x == apple.x && p.y == apple.y) {
@@ -99,7 +100,7 @@ public class Main extends JPanel{
         if(gameLost) {
             g.setColor(Color.RED);
             g.setFont(new Font("Arial", 90, 90));
-            g.drawString("Partie terminée", 13*50/2 - g.getFontMetrics().stringWidth("Partie terminée")/2, 13*50/2);
+            g.drawString("Partie terminée", LENGTH*WIDTH/2 - g.getFontMetrics().stringWidth("Partie terminée")/2, LENGTH*WIDTH/2);
             return;
         }
 
@@ -171,16 +172,16 @@ public class Main extends JPanel{
         public void move() {
             if(direction == 37 || direction == 39) {
                 x += (direction == 37) ? -1 : 1;
-                if(x > 13)
+                if(x > LENGTH)
                     x = -1;
                 else if(x < -1)
-                    x = 13;
+                    x = LENGTH;
             }else {
                 y += (direction == 38) ? -1 : 1;
-                if(y > 13)
+                if(y > LENGTH)
                     y = -1;
                 else if(y < -1)
-                    y = 13;
+                    y = LENGTH;
             }
         }
 
