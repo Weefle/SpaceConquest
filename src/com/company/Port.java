@@ -1,6 +1,6 @@
 package com.company;
 
-public class Port {
+public class Port{
 
   /* 2 La classe Port
 Les ports vont être définis par la classe Port.
@@ -26,9 +26,7 @@ void retirerBateau()et public boolean ajouterBateau(). */
 float x, y;
 Quais quais;
 
-    public Port(float x, float y) {
-        this.x = x;
-        this.y = y;
+    public Port() {
         this.quais = new Quais();
     }
 

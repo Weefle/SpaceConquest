@@ -1,6 +1,6 @@
 package com.company;
 
-public class Quais {
+public class Quais extends Port{
 
  /*   Le gestionnaire de quais
 1 Le gestionnaire de Quais va être défini par la classe Quais.
@@ -40,11 +40,17 @@ public Quais(){
 
     public Quais(int nbQuais){
 
-        //this.nbQuais = new Port(nbQuais);
+    if(nbQuais>0){
+        this.nbQuais = nbQuais;
+    }else{
+        this.nbQuais=3;
+    }
+
+        this.quaisOcc = 0;
 
     }
 
-    public boolean ajouterQuai(){
+    public boolean ajouterBateau(){
     if(this.quaisOcc < nbQuais){
         this.nbQuais++;
         return true;
@@ -52,7 +58,7 @@ public Quais(){
     return false;
     }
 
-    public void retirerQuai(){
+    public void retirerBateau(){
         if(this.quaisOcc > 0){
             this.nbQuais--;
         }

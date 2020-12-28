@@ -1,5 +1,7 @@
 package com.company;
 
+import java.util.Random;
+
 public class Bateau {
 
    /* 3 La classe Bateau
@@ -35,22 +37,37 @@ public class Bateau {
 
     Port depart, arrivee;
     boolean enMer;
+    int x, y;
 
-    public Bateau(Port depart, Port arrivee) {
+    public Bateau() {
         this.depart = null;
         this.arrivee = null;
+        this.enMer = true;
+        this.x = new Random().nextInt(10);
+        this.y = new Random().nextInt(10);
     }
 
     public Bateau(Port arrivee) {
 
-
+        if(arrivee!=null){
+            this.arrivee = arrivee;
+            arrivee.quais.ajouterQuai();
+        }else{
+            new Bateau();
+        }
 
     }
 
-    public void accoster(Port a){
+    public boolean accoster(Port a){
 
 
+        if(a.quais.ajouterQuai()){
 
+            this.arrivee = a;
+            return true;
+
+        }
+return false;
     }
 
     public void quitter(){
@@ -59,11 +76,12 @@ public class Bateau {
 
     }
 
-    public float distance(){
+    public float distance(Port a){
 
+       // float racine = (float) Math.sqrt(Math.pow(arrivee.x - depart.x, 2) + Math.pow(depart.y - arrivee.y, 2));
 
-        float racine = (float) Math.sqrt(Math.pow(arrivee.x - depart.x, 2) + Math.pow(depart.y - arrivee.y, 2));
-
+        float racine = (float) Math.sqrt(Math.pow(a.x - this.x, 2) + Math.pow(this.y - a.y, 2));
+        System.out.println(racine);
         return racine;
     }
 
