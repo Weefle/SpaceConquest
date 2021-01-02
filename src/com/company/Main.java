@@ -21,29 +21,33 @@ public class Main {
     private static ArrayList<Float> distances = new ArrayList<>();
     public static void main(String[] args) {
 
-        Port port = new Port();
         for(int i = 0 ; i<new Random().nextInt(10);i++) {
-            //ports.add(new Port();
+            ports.add(new Port(new Random().nextInt(10), new Random().nextInt(10)));
         }
         for(Port pp : ports){
             System.out.println(pp.x + " : " + pp.y);
         }
+
         Bateau bateau = new Bateau();
         for (Port p : ports) {
 
             /*if (bateau.accoster(p)) {
 
             }*/
-            bateau.arrivee.quais.ajouterBateau();
+            bateau.arrivee.ajouterBateau();
+            bateau.depart.retourneX();
+            bateau.depart.retourneY();
             //bateau.accoster();
-            distances.add(bateau.distance(p));
+            distances.add(bateau.distance());
 
         }
        // chooseBoat();
         for(float nb : distances){
             System.out.println(nb);
         }
+
        // System.out.println(distances[0]);
+
     }
 
     static void chooseBoat(float[] tab)

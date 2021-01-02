@@ -37,23 +37,21 @@ public class Bateau {
 
     Port depart, arrivee;
     boolean enMer;
-    int x, y;
 
     public Bateau() {
         this.depart = null;
         this.arrivee = null;
         this.enMer = true;
-        this.x = new Random().nextInt(10);
-        this.y = new Random().nextInt(10);
     }
 
     public Bateau(Port arrivee) {
 
-        if(arrivee!=null){
-            this.arrivee = arrivee;
-            arrivee.quais.ajouterQuai();
+        if(accoster(arrivee)){
+            this.depart = null; //TODO par quoi remplacer le port de depart ?
         }else{
-            new Bateau();
+            this.depart = null;
+            this.arrivee = null;
+            this.enMer = true;
         }
 
     }
@@ -61,9 +59,10 @@ public class Bateau {
     public boolean accoster(Port a){
 
 
-        if(a.quais.ajouterQuai()){
+        if(a.ajouterBateau()){
 
             this.arrivee = a;
+            this.enMer = false;
             return true;
 
         }
@@ -76,11 +75,10 @@ return false;
 
     }
 
-    public float distance(Port a){
+    public float distance(){
 
-       // float racine = (float) Math.sqrt(Math.pow(arrivee.x - depart.x, 2) + Math.pow(depart.y - arrivee.y, 2));
+       float racine = (float) Math.sqrt(Math.pow(arrivee.x - depart.x, 2) + Math.pow(depart.y - arrivee.y, 2));
 
-        float racine = (float) Math.sqrt(Math.pow(a.x - this.x, 2) + Math.pow(this.y - a.y, 2));
         System.out.println(racine);
         return racine;
     }

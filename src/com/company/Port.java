@@ -26,7 +26,9 @@ void retirerBateau()et public boolean ajouterBateau(). */
 float x, y;
 Quais quais;
 
-    public Port() {
+    public Port(float x, float y) {
+        this.x = x;
+        this.y = y;
         this.quais = new Quais();
     }
 
