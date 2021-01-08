@@ -1,12 +1,6 @@
 package com.company;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -14,20 +8,20 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import javax.swing.JPanel;
-import javax.swing.Timer;
+import javax.swing.*;
 
 public class Board extends JPanel implements ActionListener {
 
     private Timer timer;
     private SpaceShip spaceship;
     private List<Alien> aliens;
+    private Image bg;
     private boolean ingame;
     private final int ICRAFT_X = 960;
-    private final int ICRAFT_Y = 540;
+    private final int ICRAFT_Y = 200;
     private final int B_WIDTH = 1920;
     private final int B_HEIGHT = 1080;
-    private final int DELAY = 30;
+    private final int DELAY = 1;
     private int low = 25;
     private int high = 50;
     private int nb_aliens = new Random().nextInt(high - low) + low;
@@ -62,7 +56,7 @@ public class Board extends JPanel implements ActionListener {
 
         for (int[] p : pos) {
             p[0] = new Random().nextInt(1920);
-            p[1] = new Random().nextInt(1080);
+            p[1] = new Random().nextInt(1080 - ICRAFT_Y) + ICRAFT_Y;
         }
 
         for (int[] p : pos) {
@@ -87,6 +81,10 @@ public class Board extends JPanel implements ActionListener {
     }
 
     private void drawObjects(Graphics g) {
+
+        ImageIcon j = new ImageIcon("src/resources/space.png");
+        bg = j.getImage();
+        g.drawImage(bg,0,0,null);
 
         if (spaceship.isVisible()) {
             g.drawImage(spaceship.getImage(), spaceship.getX(), spaceship.getY(),
