@@ -15,6 +15,7 @@ public class Board extends JPanel implements ActionListener {
     private Timer timer;
     private SpaceShip spaceship;
     private List<Alien> aliens;
+    private List<Planet> planets;
     private Image bg;
     private boolean ingame;
     private final int ICRAFT_X = 960;
@@ -25,8 +26,10 @@ public class Board extends JPanel implements ActionListener {
     private int low = 25;
     private int high = 50;
     private int nb_aliens = new Random().nextInt(high - low) + low;
+    private int nb_planets = new Random().nextInt(high/10 - low/10) + low/10;
 
     private final int[][] pos = new int[nb_aliens][2];
+    private final int[][] pos2 = new int[nb_planets][2];
 
     public Board() {
 
@@ -43,7 +46,7 @@ public class Board extends JPanel implements ActionListener {
         setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
 
         spaceship = new SpaceShip(ICRAFT_X, ICRAFT_Y);
-
+        initPlanets();
         initAliens();
 
         timer = new Timer(DELAY, this);
@@ -61,6 +64,20 @@ public class Board extends JPanel implements ActionListener {
 
         for (int[] p : pos) {
             aliens.add(new Alien(p[0], p[1]));
+        }
+    }
+
+    public void initPlanets() {
+
+        planets = new ArrayList<>();
+
+        for (int[] p : pos2) {
+            p[0] = new Random().nextInt(1920);
+            p[1] = new Random().nextInt(1080 - ICRAFT_Y) + ICRAFT_Y;
+        }
+
+        for (int[] p : pos2) {
+            planets.add(new Planet(p[0], p[1]));
         }
     }
 
@@ -86,17 +103,21 @@ public class Board extends JPanel implements ActionListener {
         bg = j.getImage();
         g.drawImage(bg,0,0,null);
 
+        for (Planet planet : planets) {
+            if (planet.isVisible()) {
+                g.drawImage(planet.getImage(), planet.getX(), planet.getY(), this);
+            }
+        }
+
         if (spaceship.isVisible()) {
-            g.drawImage(spaceship.getImage(), spaceship.getX(), spaceship.getY(),
-                    this);
+            g.drawImage(spaceship.getImage(), spaceship.getX(), spaceship.getY(), this);
         }
 
         List<Missile> ms = spaceship.getMissiles();
 
         for (Missile missile : ms) {
             if (missile.isVisible()) {
-                g.drawImage(missile.getImage(), missile.getX(),
-                        missile.getY(), this);
+                g.drawImage(missile.getImage(), missile.getX(), missile.getY(), this);
             }
         }
 
@@ -180,7 +201,10 @@ public class Board extends JPanel implements ActionListener {
             Alien a = aliens.get(i);
 
             if (a.isVisible()) {
-                a.move();
+                int rand = new Random().nextInt(2);
+                if(rand > 0) {
+                    a.move();
+                }
             } else {
                 aliens.remove(i);
             }
