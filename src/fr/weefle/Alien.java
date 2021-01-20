@@ -1,4 +1,4 @@
-package com.company;
+package fr.weefle;
 
 import java.util.Random;
 

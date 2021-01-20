@@ -1,4 +1,4 @@
-package com.company;
+package fr.weefle;
 
 import java.awt.EventQueue;
 import javax.swing.JFrame;
@@ -17,7 +17,7 @@ public class Main extends JFrame {
         setResizable(false);
         pack();
 
-        setTitle("HarborMania");
+        setTitle("SpaceConquest");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }

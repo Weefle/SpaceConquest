@@ -1,17 +1,17 @@
-package com.company;
+package fr.weefle;
 
-public class Missile extends Sprite {
+public class Rocket extends Sprite {
 
     private final int BOARD_WIDTH = 1920;
-    private final int MISSILE_SPEED = 5;
+    private final int ROCKET_SPEED = 5;
 
-    public Missile(int x, int y) {
+    public Rocket(int x, int y) {
         super(x, y);
 
-        initMissile();
+        initRocket();
     }
 
-    private void initMissile() {
+    private void initRocket() {
 
         loadImage("src/resources/circle.png");
         getImageDimensions();
@@ -19,7 +19,7 @@ public class Missile extends Sprite {
 
     public void move() {
 
-        x += MISSILE_SPEED;
+        x += ROCKET_SPEED;
 
         if (x > BOARD_WIDTH)
             visible = false;

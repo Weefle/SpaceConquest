@@ -1,4 +1,4 @@
-package com.company;
+package fr.weefle;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -113,11 +113,11 @@ public class Board extends JPanel implements ActionListener {
             g.drawImage(spaceship.getImage(), spaceship.getX(), spaceship.getY(), this);
         }
 
-        List<Missile> ms = spaceship.getMissiles();
+        List<Rocket> ms = spaceship.getRockets();
 
-        for (Missile missile : ms) {
-            if (missile.isVisible()) {
-                g.drawImage(missile.getImage(), missile.getX(), missile.getY(), this);
+        for (Rocket Rocket : ms) {
+            if (Rocket.isVisible()) {
+                g.drawImage(Rocket.getImage(), Rocket.getX(), Rocket.getY(), this);
             }
         }
 
@@ -149,7 +149,7 @@ public class Board extends JPanel implements ActionListener {
         inGame();
 
         updateShip();
-        updateMissiles();
+        updateRockets();
         updateAliens();
 
         checkCollisions();
@@ -172,13 +172,13 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
-    private void updateMissiles() {
+    private void updateRockets() {
 
-        List<Missile> ms = spaceship.getMissiles();
+        List<Rocket> ms = spaceship.getRockets();
 
         for (int i = 0; i < ms.size(); i++) {
 
-            Missile m = ms.get(i);
+            Rocket m = ms.get(i);
 
             if (m.isVisible()) {
                 m.move();
@@ -227,9 +227,9 @@ public class Board extends JPanel implements ActionListener {
             }
         }
 
-        List<Missile> ms = spaceship.getMissiles();
+        List<Rocket> ms = spaceship.getRockets();
 
-        for (Missile m : ms) {
+        for (Rocket m : ms) {
 
             Rectangle r1 = m.getBounds();
 

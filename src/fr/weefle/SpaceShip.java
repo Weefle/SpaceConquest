@@ -1,4 +1,4 @@
-package com.company;
+package fr.weefle;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -8,19 +8,42 @@ public class SpaceShip extends Sprite {
 
     private int dx;
     private int dy;
-    private List<Missile> missiles;
+    private List<Rocket> rockets;
+    Planet start, finish;
+    boolean inSpace;
 
     public SpaceShip(int x, int y) {
         super(x, y);
-
+        this.start = null;
+        this.finish = null;
+        this.inSpace = true;
         initCraft();
     }
 
     private void initCraft() {
 
-        missiles = new ArrayList<>();
+        rockets = new ArrayList<>();
         loadImage("src/resources/ufo.png");
         getImageDimensions();
+    }
+
+    public boolean land(Planet a){
+
+
+        if(a.addUfo()){
+
+            this.start = a;
+            this.inSpace = false;
+            return true;
+
+        }
+        return false;
+    }
+
+    public void takeOff(int id){
+
+        //this.start.docks.remove(id);
+
     }
 
     public void move() {
@@ -37,8 +60,8 @@ public class SpaceShip extends Sprite {
         }
     }
 
-    public List<Missile> getMissiles() {
-        return missiles;
+    public List<Rocket> getRockets() {
+        return rockets;
     }
 
     public void keyPressed(KeyEvent e) {
@@ -66,8 +89,16 @@ public class SpaceShip extends Sprite {
         }
     }
 
+    public int distance(){
+
+        int racine = (int) Math.sqrt(Math.pow(start.x - finish.x, 2) + Math.pow(start.y - finish.y, 2));
+
+        System.out.println(racine);
+        return racine;
+    }
+
     public void fire() {
-        missiles.add(new Missile(x + width, y + height / 2));
+        rockets.add(new Rocket(x + width, y + height / 2));
     }
 
     public void keyReleased(KeyEvent e) {
