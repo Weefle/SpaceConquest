@@ -106,6 +106,12 @@ public class Board extends JPanel implements ActionListener {
         for (Planet planet : planets) {
             if (planet.isVisible()) {
                 g.drawImage(planet.getImage(), planet.getX(), planet.getY(), this);
+                for(Dock dock : planet.docks){
+                    if(dock.isVisible()) {
+                        g.drawImage(dock.getImage(), dock.getX(), dock.getY(), this);
+                    }
+                }
+
             }
         }
 
@@ -255,6 +261,11 @@ public class Board extends JPanel implements ActionListener {
 
         @Override
         public void keyPressed(KeyEvent e) {
+
+            int key = e.getKeyCode();
+            if (key == KeyEvent.VK_ESCAPE) {
+                System.exit(0);
+            }
             spaceship.keyPressed(e);
         }
     }

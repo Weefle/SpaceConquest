@@ -42,7 +42,7 @@ public class SpaceShip extends Sprite {
 
     public void takeOff(int id){
 
-        //this.start.docks.remove(id);
+        this.start.docks.removeIf(dock -> dock.getId() == id);
 
     }
 

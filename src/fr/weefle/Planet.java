@@ -9,10 +9,10 @@ public class Planet extends Sprite {
 
     public Planet(int x, int y) {
         super(x, y);
-        Dock dock1 = new Dock(x+1, y+1 , 1) ;
-        Dock dock2 = new Dock(x-1, y+1 , 2);
-        Dock dock3 = new Dock(x+1, y-1 , 3);
-        Dock dock4 = new Dock(x-1, y-1 , 4);
+        Dock dock1 = new Dock(x+50, y+50 , 1) ;
+        Dock dock2 = new Dock(x-50, y+50 , 2);
+        Dock dock3 = new Dock(x+50, y-50 , 3);
+        Dock dock4 = new Dock(x-50, y-50 , 4);
         this.docks.add(dock1);
         this.docks.add(dock2);
         this.docks.add(dock3);
@@ -73,10 +73,6 @@ public class Planet extends Sprite {
         return false;
     }
 
-    public void move() {
-
-
-    }
 
 }
 
