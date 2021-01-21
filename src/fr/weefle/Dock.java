@@ -2,15 +2,16 @@ package fr.weefle;
 
 public class Dock extends Sprite {
 
-    int x, y, id;
+    int x, y;
+    SpaceShip spaceShip;
     boolean took;
 
 
-    public Dock(int x, int y, int id){
+    public Dock(int x, int y, SpaceShip spaceShip){
         super(x, y);
         this.x = x;
         this.y = y;
-        this.id = id;
+        this.spaceShip = spaceShip;
         this.took = false;
 
         initDock();
@@ -21,18 +22,18 @@ public class Dock extends Sprite {
         getImageDimensions();
     }
 
-    public int getId(){
+    public SpaceShip getSpaceShip(){
 
-        return this.id;
+        return this.spaceShip;
 
     }
 
-    public boolean isTook(){
-        return this.took;
+    public void setSpaceShip(SpaceShip spaceShip){
+        this.spaceShip = spaceShip;
     }
 
-    public void setTook(boolean took){
-        this.took = took;
+    public void removeSpaceShip(SpaceShip spaceShip){
+        this.spaceShip = null;
     }
 
 }

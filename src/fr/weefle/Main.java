@@ -5,6 +5,8 @@ import javax.swing.JFrame;
 
 public class Main extends JFrame {
 
+    public static AudioPlayer player;
+
     public Main() {
 
         initUI();
@@ -17,6 +19,9 @@ public class Main extends JFrame {
         setResizable(false);
         pack();
 
+        String audioFilePath = "src/resources/game_theme.wav";
+        player = new AudioPlayer(audioFilePath);
+        player.loop();
         setTitle("SpaceConquest");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

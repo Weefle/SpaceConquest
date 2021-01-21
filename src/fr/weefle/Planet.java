@@ -1,6 +1,7 @@
 package fr.weefle;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 public class Planet extends Sprite {
@@ -9,10 +10,10 @@ public class Planet extends Sprite {
 
     public Planet(int x, int y) {
         super(x, y);
-        Dock dock1 = new Dock(x+50, y+50 , 1) ;
-        Dock dock2 = new Dock(x-50, y+50 , 2);
-        Dock dock3 = new Dock(x+50, y-50 , 3);
-        Dock dock4 = new Dock(x-50, y-50 , 4);
+        Dock dock1 = new Dock(x+50, y+50 , null) ;
+        Dock dock2 = new Dock(x-50, y+50 , null);
+        Dock dock3 = new Dock(x+50, y-50 , null);
+        Dock dock4 = new Dock(x-50, y-50 , null);
         this.docks.add(dock1);
         this.docks.add(dock2);
         this.docks.add(dock3);
@@ -51,25 +52,28 @@ public class Planet extends Sprite {
         return y;
     }
 
-    public boolean addUfo(){
+    public boolean addUfo(SpaceShip spaceShip){
+
 
         for(Dock dock : docks){
-            if(!dock.isTook()){
-                dock.setTook(true);
+            if(dock.getSpaceShip() == null || !dock.getSpaceShip().equals(spaceShip)){
+                dock.setSpaceShip(spaceShip);
                 return true;
             }
         }
+
         return false;
     }
 
-    public boolean removeUfo(){
+    public boolean removeUfo(SpaceShip spaceShip){
 
         for(Dock dock : docks){
-            if(dock.isTook()){
-                dock.setTook(false);
+            if(dock.getSpaceShip() != null && dock.getSpaceShip().equals(spaceShip)){
+                dock.removeSpaceShip(spaceShip);
                 return true;
             }
         }
+
         return false;
     }
 

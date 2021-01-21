@@ -1,10 +1,7 @@
 package fr.weefle;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -39,6 +36,7 @@ public class Board extends JPanel implements ActionListener {
     private void initBoard() {
 
         addKeyListener(new TAdapter());
+        addMouseListener(new MAdapter());
         setFocusable(true);
         setBackground(Color.BLACK);
         ingame = true;
@@ -92,6 +90,10 @@ public class Board extends JPanel implements ActionListener {
         } else {
 
             drawGameOver(g);
+            Main.player.stop();
+            String audioFilePath = "src/resources/game_over.wav";
+            AudioPlayer player = new AudioPlayer(audioFilePath);
+            player.play();
         }
 
         Toolkit.getDefaultToolkit().sync();
@@ -244,12 +246,36 @@ public class Board extends JPanel implements ActionListener {
                 Rectangle r2 = alien.getBounds();
 
                 if (r1.intersects(r2)) {
-
                     m.setVisible(false);
                     alien.setVisible(false);
+                    String audioFilePath = "src/resources/explosion.wav";
+                    AudioPlayer player = new AudioPlayer(audioFilePath);
+                    player.play();
                 }
             }
         }
+    }
+
+    private class MAdapter extends MouseAdapter {
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+
+            for(Planet planet : planets){
+                Rectangle hitBox = planet.getBounds();
+                if(hitBox.contains(e.getX(), e.getY())){
+                    if(planet.addUfo(spaceship)){
+                        if(spaceship.land(planet)){
+                            spaceship.distance();
+                        }
+                    }
+                    //System.exit(0);
+                }
+
+            }
+
+        }
+
     }
 
     private class TAdapter extends KeyAdapter {

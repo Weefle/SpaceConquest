@@ -27,12 +27,13 @@ public class SpaceShip extends Sprite {
         getImageDimensions();
     }
 
-    public boolean land(Planet a){
+    public boolean land(Planet finish){
 
 
-        if(a.addUfo()){
+        this.finish = finish;
+        if(finish.addUfo(this)){
 
-            this.start = a;
+            this.start = finish;
             this.inSpace = false;
             return true;
 
@@ -40,9 +41,11 @@ public class SpaceShip extends Sprite {
         return false;
     }
 
-    public void takeOff(int id){
+    public void takeOff(){
 
-        this.start.docks.removeIf(dock -> dock.getId() == id);
+        if(this.start.removeUfo(this)){
+            this.finish.addUfo(this);
+        }
 
     }
 
@@ -99,6 +102,9 @@ public class SpaceShip extends Sprite {
 
     public void fire() {
         rockets.add(new Rocket(x + width, y + height / 2));
+        String audioFilePath = "src/resources/laser.wav";
+        AudioPlayer player = new AudioPlayer(audioFilePath);
+        player.play();
     }
 
     public void keyReleased(KeyEvent e) {
