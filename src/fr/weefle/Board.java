@@ -30,6 +30,9 @@ public class Board extends JPanel implements ActionListener {
 
     public Board() {
 
+        for (Point point : getPoints(new Point(0,0), new Point(10,10))) {
+            System.out.println(point.getX() + " : " + point.getY());
+         }
         initBoard();
     }
 
@@ -210,9 +213,9 @@ public class Board extends JPanel implements ActionListener {
 
             if (a.isVisible()) {
                 int rand = new Random().nextInt(2);
-                if(rand > 0) {
+                //if(rand > 0) {
                     a.move();
-                }
+                //}
             } else {
                 aliens.remove(i);
             }
@@ -254,6 +257,62 @@ public class Board extends JPanel implements ActionListener {
                 }
             }
         }
+    }
+
+    public ArrayList<Point> getPoints(Point p1, Point p2)
+    {
+        ArrayList<Point> points = new ArrayList<Point>();
+
+        // no slope (vertical line)
+        if (p1.getX() == p2.getX())
+        {
+            for (double y = p1.getY(); y <= p2.getY(); y++)
+            {
+                Point p = new Point((int)p1.getX(), (int)y);
+                points.add(p);
+            }
+        }
+        else
+        {
+            // swap p1 and p2 if p2.X < p1.X
+            if (p2.getX() < p1.getX())
+            {
+                Point temp = p1;
+                p1 = p2;
+                p2 = temp;
+            }
+
+            double deltaX = p2.getX() - p1.getX();
+            double deltaY = p2.getY() - p1.getY();
+            double error = -1.0f;
+            double deltaErr = Math.abs(deltaY / deltaX);
+
+            double y = p1.getY();
+            for (double x = p1.getX(); x <= p2.getX(); x++)
+            {
+                Point p = new Point((int)x, (int)y);
+                points.add(p);
+                //System.out.println("Added Point: " + p.getX() + "," + p.getY());
+
+                error += deltaErr;
+                //System.out.println("Error is now: " + error);
+
+                while (error >= 0.0f)
+                {
+                    //System.out.println("   Moving Y to " + y);
+                    y++;
+                    points.add(new Point((int)x, (int)y));
+                    error -= 1.0f;
+                }
+            }
+
+            if (!points.get(points.size()-1).equals(p2))
+            {
+                points.remove(points.get(points.size()-1));
+            }
+        }
+
+        return points;
     }
 
     private class MAdapter extends MouseAdapter {
