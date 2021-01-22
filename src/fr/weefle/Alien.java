@@ -6,6 +6,8 @@ public class Alien extends Sprite {
 
     private int dx;
     private int dy;
+    private final int INITIAL_X = 1920;
+    private final int INITIAL_Y = 1080;
 
     public Alien(int x, int y) {
         super(x, y);
@@ -20,6 +22,14 @@ public class Alien extends Sprite {
     }
 
     public void move() {
+
+        if (x < 0) {
+            x = INITIAL_X;
+        }
+
+        if (y < 0) {
+            y = INITIAL_Y;
+        }
 
         x -= 2;
 
