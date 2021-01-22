@@ -36,9 +36,9 @@ public class Board extends JPanel implements ActionListener {
 
     public Board() {
 
-        for (Point point : getPoints(new Point(0,0), new Point(10,10))) {
+        /*for (Point point : getPoints(new Point(0,0), new Point(10,10))) {
             System.out.println(point.getX() + " : " + point.getY());
-         }
+         }*/
         initBoard();
     }
 
@@ -297,7 +297,7 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
-    public ArrayList<Point> getPoints(Point p1, Point p2)
+    /*public ArrayList<Point> getPoints(Point p1, Point p2)
     {
         ArrayList<Point> points = new ArrayList<Point>();
 
@@ -351,7 +351,7 @@ public class Board extends JPanel implements ActionListener {
         }
 
         return points;
-    }
+    }*/
 
     private class MAdapter extends MouseAdapter {
 
