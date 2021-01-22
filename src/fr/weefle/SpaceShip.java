@@ -29,12 +29,11 @@ public class SpaceShip extends Sprite {
 
     public boolean land(Planet finish){
 
-
-        this.finish = finish;
         if(finish.addUfo(this)){
 
-            this.start = finish;
-            this.inSpace = false;
+            this.finish = finish;
+            //this.start = finish;
+            //this.inSpace = false;
             return true;
 
         }
@@ -94,7 +93,8 @@ public class SpaceShip extends Sprite {
 
     public int distance(){
 
-        int racine = (int) Math.sqrt(Math.pow(start.x - finish.x, 2) + Math.pow(start.y - finish.y, 2));
+        //int racine = (int) Math.sqrt(Math.pow(start.x - finish.x, 2) + Math.pow(start.y - finish.y, 2));
+        int racine = (int) Math.sqrt(Math.pow(this.getX() - finish.x, 2) + Math.pow(this.getY() - finish.y, 2));
 
         System.out.println(racine);
         return racine;

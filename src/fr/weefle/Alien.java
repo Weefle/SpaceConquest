@@ -6,13 +6,14 @@ public class Alien extends Sprite {
 
     private int dx;
     private int dy;
+    private boolean isNavigating;
     private final int INITIAL_X = 1920;
     private final int INITIAL_Y = 1080;
 
     public Alien(int x, int y) {
         super(x, y);
-
         initAlien();
+        this.isNavigating = false;
     }
 
     private void initAlien() {
@@ -23,7 +24,7 @@ public class Alien extends Sprite {
 
     public void move() {
 
-        if (x < 0) {
+       /* if (x < 0) {
             x = INITIAL_X;
         }
 
@@ -36,17 +37,27 @@ public class Alien extends Sprite {
         int rand = new Random().nextInt(2);
 
         if(rand > 0){
-            x += new Random().nextInt(2);
+            x += new Random().nextInt(4);
         }else{
-            x -= new Random().nextInt(2);
+            x -= new Random().nextInt(4);
         }
 
         if(rand > 0){
-            y += new Random().nextInt(2);
+            y += new Random().nextInt(4);
         }else{
-            y -= new Random().nextInt(2);
+            y -= new Random().nextInt(4);
+        }*/
+
+        if(dx==0 && dy==0){
+            randomDirection();
         }
 
+        if(this.isNavigating){
+
+        }else{
+            x += dx;
+            y += dy;
+        }
 
 
         if (x >= 1920) {
@@ -65,8 +76,14 @@ public class Alien extends Sprite {
             y = 1;
             randomDirection();
         }
-        x += dx;
-        y += dy;
+    }
+
+    public boolean isNavigating(){
+        return this.isNavigating;
+    }
+
+    public void setNavigating(boolean navigating) {
+        this.isNavigating = navigating;
     }
 
     public void randomDirection() {
