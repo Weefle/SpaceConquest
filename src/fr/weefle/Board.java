@@ -95,7 +95,6 @@ public class Board extends JPanel implements ActionListener {
         if (ingame) {
 
             drawObjects(g);
-            drawSpecial(g);
 
         } else {
 
@@ -107,27 +106,6 @@ public class Board extends JPanel implements ActionListener {
         }
 
         Toolkit.getDefaultToolkit().sync();
-    }
-
-    private void drawSpecial(Graphics g) {
-
-        if (spaceship.isVisible()) {
-            Graphics2D g2d = (Graphics2D) g;
-            g2d.setRenderingHint(
-                    RenderingHints.KEY_RENDERING,
-                    RenderingHints.VALUE_RENDER_QUALITY);
-
-            int cx = spaceship.getImage().getWidth(null) / 2;
-            int cy = spaceship.getImage().getHeight(null) / 2;
-            AffineTransform oldAT = g2d.getTransform();
-            g2d.translate(cx + spaceship.x, cy + spaceship.y);
-            g2d.rotate(imageAngleRad);
-            g2d.translate(-cx, -cy);
-            g2d.drawImage(spaceship.getImage(), 0, 0, null);
-            g2d.setTransform(oldAT);
-            //g.drawImage(spaceship.getImage(), spaceship.getX(), spaceship.getY(), this);
-        }
-
     }
 
     private void drawObjects(Graphics g) {
@@ -159,6 +137,26 @@ public class Board extends JPanel implements ActionListener {
         for (Alien alien : aliens) {
             if (alien.isVisible()) {
                 g.drawImage(alien.getImage(), alien.getX(), alien.getY(), this);
+            }
+        }
+
+        if (spaceship.isVisible()) {
+            if(!spaceship.inSpace){
+                g.drawImage(spaceship.getImage(), spaceship.getX(), spaceship.getY(), this);
+            }else {
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setRenderingHint(
+                        RenderingHints.KEY_RENDERING,
+                        RenderingHints.VALUE_RENDER_QUALITY);
+
+                int cx = spaceship.getImage().getWidth(null) / 2;
+                int cy = spaceship.getImage().getHeight(null) / 2;
+                AffineTransform oldAT = g2d.getTransform();
+                g2d.translate(cx + spaceship.x, cy + spaceship.y);
+                g2d.rotate(imageAngleRad);
+                g2d.translate(-cx, -cy);
+                g2d.drawImage(spaceship.getImage(), 0, 0, null);
+                g2d.setTransform(oldAT);
             }
         }
 
@@ -268,12 +266,31 @@ public class Board extends JPanel implements ActionListener {
 
             Rectangle r2 = alien.getBounds();
 
-            if (r3.intersects(r2)) {
+            /*if (r3.intersects(r2)) {
 
                 spaceship.setVisible(false);
                 alien.setVisible(false);
                 ingame = false;
-            }
+            }*/
+        }
+
+        for(Planet planet : planets) {
+            Rectangle r2 = planet.getBounds();
+
+                if (r3.intersects(r2) && spaceship.finish != null && spaceship.finish.equals(planet) && spaceship.inSpace) {
+                    if (spaceship.land(planet)) {
+                        for (Dock dock : planet.docks) {
+                            if (dock.getSpaceShip() != null && dock.getSpaceShip().equals(spaceship)) {
+                                spaceship.x = dock.getX();
+                                spaceship.y = dock.getY();
+                                //spaceship.setVisible(false);
+                                mousePoint = null;
+                            }
+                        }
+
+
+                }
+        }
         }
 
         List<Rocket> ms = spaceship.getRockets();
@@ -361,16 +378,22 @@ public class Board extends JPanel implements ActionListener {
             for(Planet planet : planets){
                 Rectangle hitBox = planet.getBounds();
                 if(hitBox.contains(e.getX(), e.getY())){
-                    //if(planet.addUfo(spaceship)){
-                        if(spaceship.land(planet)){
-                            distance = spaceship.distance()+"";
-                            mousePoint = e.getPoint();
-                            double dx = e.getX() - spaceship.getX();
-                            double dy = e.getY() - spaceship.getY();
-                            imageAngleRad = Math.atan2(dy, dx);
-                            repaint();
+                    if(spaceship.finish==null) {
+                        if (spaceship.start != planet) {
+                            if (planet.addUfo(spaceship)) {
+                                if (spaceship.start != null) {
+                                    spaceship.takeOff();
+                                }
+                                spaceship.finish = planet;
+                                distance = spaceship.distance() + "";
+                                mousePoint = e.getPoint();
+                                double dx = e.getX() - spaceship.getX();
+                                double dy = e.getY() - spaceship.getY();
+                                imageAngleRad = Math.atan2(dy, dx);
+                                repaint();
+                            }
                         }
-                        //}
+                    }
                 }
 
             }

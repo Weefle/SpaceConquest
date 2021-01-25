@@ -27,23 +27,24 @@ public class SpaceShip extends Sprite {
         getImageDimensions();
     }
 
-    public boolean land(Planet finish){
+    public boolean land(Planet planet) {
 
-        if(finish.addUfo(this)){
+        if (this.inSpace){
+            this.start = planet;
+        this.finish = null;
+        this.inSpace = false;
+        return true;
+    }
+            return false;
 
-            this.finish = finish;
-            //this.start = finish;
-            //this.inSpace = false;
-            return true;
-
-        }
-        return false;
     }
 
     public void takeOff(){
 
         if(this.start.removeUfo(this)){
-            this.finish.addUfo(this);
+            this.start = null;
+            this.finish = null;
+            this.inSpace = true;
         }
 
     }

@@ -28,6 +28,14 @@ public class Dock extends Sprite {
 
     }
 
+    public int getX(){
+        return this.x;
+    }
+
+    public int getY(){
+        return this.y;
+    }
+
     public void setSpaceShip(SpaceShip spaceShip){
         this.spaceShip = spaceShip;
     }

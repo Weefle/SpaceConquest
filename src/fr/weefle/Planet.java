@@ -10,10 +10,10 @@ public class Planet extends Sprite {
 
     public Planet(int x, int y) {
         super(x, y);
-        Dock dock1 = new Dock(x+50, y+50 , null) ;
-        Dock dock2 = new Dock(x-50, y+50 , null);
-        Dock dock3 = new Dock(x+50, y-50 , null);
-        Dock dock4 = new Dock(x-50, y-50 , null);
+        Dock dock1 = new Dock(x+100, y+100 , null) ;
+        Dock dock2 = new Dock(x, y+100 , null);
+        Dock dock3 = new Dock(x+100, y , null);
+        Dock dock4 = new Dock(x, y , null);
         this.docks.add(dock1);
         this.docks.add(dock2);
         this.docks.add(dock3);
