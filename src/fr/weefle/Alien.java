@@ -1,19 +1,17 @@
 package fr.weefle;
 
-import java.util.Random;
-
 public class Alien extends Sprite {
 
     private int dx;
     private int dy;
-    private boolean isNavigating;
+    //private boolean isNavigating;
     private final int INITIAL_X = 1920;
     private final int INITIAL_Y = 1080;
 
     public Alien(int x, int y) {
         super(x, y);
         initAlien();
-        this.isNavigating = false;
+        //this.isNavigating = false;
     }
 
     private void initAlien() {
@@ -52,12 +50,12 @@ public class Alien extends Sprite {
             randomDirection();
         }
 
-        if(this.isNavigating){
+        /*if(this.isNavigating){
 
-        }else{
+        }else{*/
             x += dx;
             y += dy;
-        }
+       // }
 
 
         if (x >= 1920) {
@@ -78,13 +76,13 @@ public class Alien extends Sprite {
         }
     }
 
-    public boolean isNavigating(){
+    /*public boolean isNavigating(){
         return this.isNavigating;
     }
 
     public void setNavigating(boolean navigating) {
         this.isNavigating = navigating;
-    }
+    }*/
 
     public void randomDirection() {
         double speed = 4.0;

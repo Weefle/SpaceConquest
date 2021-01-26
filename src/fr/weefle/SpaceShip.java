@@ -3,6 +3,7 @@ package fr.weefle;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class SpaceShip extends Sprite {
 
@@ -11,12 +12,14 @@ public class SpaceShip extends Sprite {
     private List<Rocket> rockets;
     Planet start, finish;
     boolean inSpace;
+    private UUID uuid;
 
     public SpaceShip(int x, int y) {
         super(x, y);
         this.start = null;
         this.finish = null;
         this.inSpace = true;
+        this.uuid = UUID.randomUUID();
         initCraft();
     }
 
@@ -39,6 +42,10 @@ public class SpaceShip extends Sprite {
 
     }
 
+    public UUID getUuid(){
+        return this.uuid;
+    }
+
     public void takeOff(){
 
         if(this.start.removeUfo(this)){
@@ -51,7 +58,7 @@ public class SpaceShip extends Sprite {
 
     public void move() {
 
-        x += dx;
+        /*x += dx;
         y += dy;
 
         if (x < 1) {
@@ -60,7 +67,37 @@ public class SpaceShip extends Sprite {
 
         if (y < 1) {
             y = 1;
+        }*/
+        if(dx==0 && dy==0){
+            randomDirection();
         }
+
+        x += dx;
+        y += dy;
+
+
+        if (x >= 1920) {
+            x = 1920;
+            randomDirection();
+        }
+        if (x <= 1) {
+            x = 1;
+            randomDirection();
+        }
+        if (y >= 1080) {
+            y = 1080;
+            randomDirection();
+        }
+        if (y <= 1) {
+            y = 1;
+            randomDirection();
+        }
+    }
+    public void randomDirection() {
+        double speed = 4.0;
+        double direction = Math.random()*2*Math.PI;
+        dx = (int) (speed * Math.cos(direction));
+        dy = (int) (speed * Math.sin(direction));
     }
 
     public List<Rocket> getRockets() {

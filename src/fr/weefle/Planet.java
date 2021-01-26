@@ -10,10 +10,10 @@ public class Planet extends Sprite {
 
     public Planet(int x, int y) {
         super(x, y);
-        Dock dock1 = new Dock(x+100, y+100 , null) ;
-        Dock dock2 = new Dock(x, y+100 , null);
-        Dock dock3 = new Dock(x+100, y , null);
-        Dock dock4 = new Dock(x, y , null);
+        Dock dock1 = new Dock(x+100, y+100) ;
+        Dock dock2 = new Dock(x, y+100);
+        Dock dock3 = new Dock(x+100, y);
+        Dock dock4 = new Dock(x, y);
         this.docks.add(dock1);
         this.docks.add(dock2);
         this.docks.add(dock3);
@@ -56,8 +56,8 @@ public class Planet extends Sprite {
 
 
         for(Dock dock : docks){
-            if(dock.getSpaceShip() == null || !dock.getSpaceShip().equals(spaceShip)){
-                dock.setSpaceShip(spaceShip);
+            if(dock.getUuid()==null || dock.getUuid().equals(spaceShip.getUuid())){
+                dock.setUuid(spaceShip.getUuid());
                 return true;
             }
         }
@@ -68,8 +68,8 @@ public class Planet extends Sprite {
     public boolean removeUfo(SpaceShip spaceShip){
 
         for(Dock dock : docks){
-            if(dock.getSpaceShip() != null && dock.getSpaceShip().equals(spaceShip)){
-                dock.removeSpaceShip(spaceShip);
+            if(dock.getUuid()!=null && dock.getUuid().equals(spaceShip.getUuid())){
+                dock.removeUuid(spaceShip.getUuid());
                 return true;
             }
         }
