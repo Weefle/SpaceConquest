@@ -16,6 +16,8 @@ public class Main extends JFrame {
 
         add(new Board());
 
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+
         setResizable(false);
         pack();
 

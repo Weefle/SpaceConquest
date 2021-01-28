@@ -173,6 +173,7 @@ public class Board extends JPanel implements ActionListener {
                     int cx = spaceship.getImage().getWidth(null) / 2;
                     int cy = spaceship.getImage().getHeight(null) / 2;
                     AffineTransform oldAT = g2d.getTransform();
+                    g2d.drawRect(spaceship.getX(), spaceship.getY(), spaceship.getImage().getWidth(null), spaceship.getImage().getHeight(null));
                     g2d.translate(cx + spaceship.x, cy + spaceship.y);
                     g2d.rotate(imageAngleRad);
                     g2d.translate(-cx, -cy);
@@ -490,7 +491,21 @@ public class Board extends JPanel implements ActionListener {
 
             int key = e.getKeyCode();
             if (key == KeyEvent.VK_ESCAPE) {
-                System.exit(0);
+                if (spaceship != null) {
+                    if (!spaceship.inSpace) {
+                        spaceship.takeOff();
+                    } else {
+                        if(spaceship.finish!=null) {
+                            spaceship.finish.removeUfo(spaceship);
+                        }
+                        spaceship.finish=null;
+                        spaceship=null;
+                    }
+
+                }else{
+                        System.exit(0);
+
+                }
             }
             if(spaceship!=null) {
                 spaceship.keyPressed(e);
