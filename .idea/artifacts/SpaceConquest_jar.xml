@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="SpaceConquest:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/SpaceConquest_jar</output-path>
+    <root id="archive" name="SpaceConquest.jar">
+      <element id="module-output" name="SpaceConquest" />
+    </root>
+  </artifact>
+</component>

@@ -7,8 +7,8 @@ import java.util.UUID;
 
 public class SpaceShip extends Sprite {
 
-    private int dx;
-    private int dy;
+    private int dx, dx_2;
+    private int dy, dy_2;
     private List<Rocket> rockets;
     Planet start, finish;
     boolean inSpace;
@@ -21,6 +21,22 @@ public class SpaceShip extends Sprite {
         this.inSpace = true;
         this.uuid = UUID.randomUUID();
         initCraft();
+    }
+
+    public int getDirX(){
+        return this.dx;
+    }
+
+    public int getDirY(){
+        return this.dy;
+    }
+
+    public void setDirX(int dirX){
+        this.dx = dirX;
+    }
+
+    public void setDirY(int dirY){
+        this.dy = dirY;
     }
 
     private void initCraft() {
@@ -58,46 +74,43 @@ public class SpaceShip extends Sprite {
 
     public void move() {
 
-        /*x += dx;
-        y += dy;
 
-        if (x < 1) {
-            x = 1;
-        }
+        if(Board.spaceship!=this) {
 
-        if (y < 1) {
-            y = 1;
-        }*/
-        if(dx==0 && dy==0){
-            randomDirection();
-        }
-
-        x += dx;
-        y += dy;
+            if (dx_2 == 0 && dy_2 == 0) {
+                randomDirection();
+            }
 
 
-        if (x >= 1920) {
-            x = 1920;
-            randomDirection();
+            if (x >= 1920) {
+                x = 1920;
+                randomDirection();
+            }
+            if (x <= 1) {
+                x = 1;
+                randomDirection();
+            }
+            if (y >= 1080) {
+                y = 1080;
+                randomDirection();
+            }
+            if (y <= 1) {
+                y = 1;
+                randomDirection();
+            }
+            x += dx_2;
+            y += dy_2;
+        }else{
+            x += dx;
+            y += dy;
         }
-        if (x <= 1) {
-            x = 1;
-            randomDirection();
-        }
-        if (y >= 1080) {
-            y = 1080;
-            randomDirection();
-        }
-        if (y <= 1) {
-            y = 1;
-            randomDirection();
-        }
+
     }
     public void randomDirection() {
         double speed = 4.0;
         double direction = Math.random()*2*Math.PI;
-        dx = (int) (speed * Math.cos(direction));
-        dy = (int) (speed * Math.sin(direction));
+        dx_2 = (int) (speed * Math.cos(direction));
+        dy_2 = (int) (speed * Math.sin(direction));
     }
 
     public List<Rocket> getRockets() {
@@ -131,18 +144,24 @@ public class SpaceShip extends Sprite {
 
     public int distance(){
 
-        //int racine = (int) Math.sqrt(Math.pow(start.x - finish.x, 2) + Math.pow(start.y - finish.y, 2));
         int racine = (int) Math.sqrt(Math.pow(this.getX() - finish.x, 2) + Math.pow(this.getY() - finish.y, 2));
 
-        System.out.println(racine);
         return racine;
     }
 
     public void fire() {
-        rockets.add(new Rocket(x + width, y + height / 2));
-        String audioFilePath = "src/resources/laser.wav";
-        AudioPlayer player = new AudioPlayer(audioFilePath);
-        player.play();
+        if(this.getDirX()!=0 || this.getDirY()!=0) {
+            Rocket rocket = new Rocket(x + width / 2, y + height / 2);
+            double speed = 5.0;
+            int dx = (int) (speed * this.getDirX());
+            int dy = (int) (speed * this.getDirY());
+            rocket.setDirX(dx);
+            rocket.setDirY(dy);
+            rockets.add(rocket);
+            String audioFilePath = "src/resources/laser.wav";
+            AudioPlayer player = new AudioPlayer(audioFilePath);
+            player.play();
+        }
     }
 
     public void keyReleased(KeyEvent e) {

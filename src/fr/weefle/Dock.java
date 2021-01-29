@@ -6,7 +6,6 @@ public class Dock extends Sprite {
 
     int x, y;
     private UUID uuid;
-    //SpaceShip spaceShip;
     boolean took;
 
 
@@ -14,7 +13,6 @@ public class Dock extends Sprite {
         super(x, y);
         this.x = x;
         this.y = y;
-        //this.spaceShip = spaceShip;
         this.took = false;
         this.uuid = null;
 
@@ -25,12 +23,6 @@ public class Dock extends Sprite {
         loadImage("src/resources/circle.png");
         getImageDimensions();
     }
-
-    /*public SpaceShip getSpaceShip(){
-
-        return this.spaceShip;
-
-    }*/
 
     public UUID getUuid(){
         return this.uuid;
@@ -52,12 +44,5 @@ public class Dock extends Sprite {
         this.uuid = null;
     }
 
-    /*public void setSpaceShip(SpaceShip spaceShip){
-        this.spaceShip = spaceShip;
-    }*/
-
-    /*public void removeSpaceShip(SpaceShip spaceShip){
-        this.spaceShip = null;
-    }*/
 
 }

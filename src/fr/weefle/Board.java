@@ -11,14 +11,12 @@ import javax.swing.*;
 public class Board extends JPanel implements ActionListener {
 
     private Timer timer;
-    private SpaceShip spaceship;
+    public static SpaceShip spaceship;
     private List<SpaceShip> spaceships;
     private List<Alien> aliens;
     private List<Planet> planets;
     private Image bg;
     private boolean ingame;
-    private final int ICRAFT_X = 960;
-    private final int ICRAFT_Y = 200;
     private final int B_WIDTH = 1920;
     private final int B_HEIGHT = 1080;
     private final int DELAY = 1;
@@ -37,9 +35,6 @@ public class Board extends JPanel implements ActionListener {
 
     public Board() {
 
-        /*for (Point point : getPoints(new Point(0,0), new Point(10,10))) {
-            System.out.println(point.getX() + " : " + point.getY());
-         }*/
         initBoard();
     }
 
@@ -53,8 +48,6 @@ public class Board extends JPanel implements ActionListener {
 
         setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
 
-
-        //spaceship = new SpaceShip(ICRAFT_X, ICRAFT_Y);
         initPlanets();
         initAliens();
         initSpaceShips();
@@ -69,7 +62,7 @@ public class Board extends JPanel implements ActionListener {
 
         for (int[] p : pos) {
             p[0] = new Random().nextInt(1920);
-            p[1] = new Random().nextInt(1080 - ICRAFT_Y) + ICRAFT_Y;
+            p[1] = new Random().nextInt(1080);
         }
 
         for (int[] p : pos) {
@@ -83,7 +76,7 @@ public class Board extends JPanel implements ActionListener {
 
         for (int[] p : pos) {
             p[0] = new Random().nextInt(1920);
-            p[1] = new Random().nextInt(1080 - ICRAFT_Y) + ICRAFT_Y;
+            p[1] = new Random().nextInt(1080);
         }
 
         for (int[] p : pos) {
@@ -97,7 +90,7 @@ public class Board extends JPanel implements ActionListener {
 
         for (int[] p : pos2) {
             p[0] = new Random().nextInt(1920);
-            p[1] = new Random().nextInt(1080 - ICRAFT_Y) + ICRAFT_Y;
+            p[1] = new Random().nextInt(1080);
         }
 
         for (int[] p : pos2) {
@@ -134,11 +127,11 @@ public class Board extends JPanel implements ActionListener {
         for (Planet planet : planets) {
             if (planet.isVisible()) {
                 g.drawImage(planet.getImage(), planet.getX(), planet.getY(), this);
-                for (Dock dock : planet.docks) {
+                /*for (Dock dock : planet.docks) {
                     if (dock.isVisible()) {
                         g.drawImage(dock.getImage(), dock.getX(), dock.getY(), this);
                     }
-                }
+                }*/
 
             }
         }
@@ -175,6 +168,9 @@ public class Board extends JPanel implements ActionListener {
                     AffineTransform oldAT = g2d.getTransform();
                     g2d.drawRect(spaceship.getX(), spaceship.getY(), spaceship.getImage().getWidth(null), spaceship.getImage().getHeight(null));
                     g2d.translate(cx + spaceship.x, cy + spaceship.y);
+                    if(mousePoint==null){
+                        imageAngleRad = Math.atan2(spaceship.getDirY(), spaceship.getDirX());
+                    }
                     g2d.rotate(imageAngleRad);
                     g2d.translate(-cx, -cy);
                     g2d.drawImage(spaceship.getImage(), 0, 0, null);
@@ -251,7 +247,7 @@ public class Board extends JPanel implements ActionListener {
             if(spaceship.finish==null) {
                 if(spaceship.inSpace) {
                     if (spaceship.isVisible()) {
-                        spaceship.move();
+                            spaceship.move();
                     }
                 }
             }
@@ -316,17 +312,17 @@ public class Board extends JPanel implements ActionListener {
 
         Rectangle r3 = spaceship.getBounds();
 
-        for (Alien alien : aliens) {
+        /*for (Alien alien : aliens) {
 
             Rectangle r2 = alien.getBounds();
 
-            /*if (r3.intersects(r2)) {
+            if (r3.intersects(r2)) {
 
                 spaceship.setVisible(false);
                 alien.setVisible(false);
                 ingame = false;
-            }*/
-        }
+            }
+        }*/
 
         for (Planet planet : planets) {
             Rectangle r2 = planet.getBounds();
@@ -337,7 +333,6 @@ public class Board extends JPanel implements ActionListener {
                         if (dock.getUuid() != null && dock.getUuid().equals(spaceship.getUuid())) {
                             spaceship.x = dock.getX();
                             spaceship.y = dock.getY();
-                            //spaceship.setVisible(false);
                             mousePoint = null;
                         }
                     }
@@ -369,7 +364,91 @@ public class Board extends JPanel implements ActionListener {
     }
     }
 
-    /*public ArrayList<Point> getPoints(Point p1, Point p2)
+    private class MAdapter extends MouseAdapter {
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+
+            for(Planet planet : planets){
+                Rectangle hitBox = planet.getBounds();
+                if(hitBox.contains(e.getX(), e.getY())) {
+                    if (spaceship != null){
+                        if (spaceship.finish == null) {
+                            if (spaceship.start != planet) {
+                                if (planet.addUfo(spaceship)) {
+                                    if (spaceship.start != null) {
+                                        spaceship.takeOff();
+                                    }
+                                    spaceship.finish = planet;
+                                    distance = spaceship.distance() + "";
+                                    mousePoint = e.getPoint();
+                                    double dx = e.getX() - spaceship.getX();
+                                    double dy = e.getY() - spaceship.getY();
+                                    imageAngleRad = Math.atan2(dy, dx);
+                                    repaint();
+                                }
+                            }
+                        }
+                }
+                }
+
+            }
+
+            for(SpaceShip spaceShip: spaceships){
+                Rectangle hitBox = spaceShip.getBounds();
+                if(hitBox.contains(e.getX(), e.getY())) {
+                    if(spaceship==null) {
+                        spaceship = spaceShip;
+                    }else if(spaceship.finish==null) {
+                            spaceship = spaceShip;
+                        }
+                    }
+
+                }
+
+
+
+        }
+
+    }
+
+    private class TAdapter extends KeyAdapter {
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+            if(spaceship!=null) {
+                spaceship.keyReleased(e);
+            }
+        }
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+
+            int key = e.getKeyCode();
+            if (key == KeyEvent.VK_ESCAPE) {
+                if (spaceship != null) {
+                    if (!spaceship.inSpace) {
+                        spaceship.takeOff();
+                    } else {
+                        if(spaceship.finish!=null) {
+                            spaceship.finish.removeUfo(spaceship);
+                        }
+                        spaceship.finish=null;
+                        spaceship=null;
+                    }
+                    mousePoint=null;
+
+                }else{
+                        System.exit(0);
+
+                }
+            }
+            if(spaceship!=null) {
+                spaceship.keyPressed(e);
+            }
+        }
+    }
+        /*public ArrayList<Point> getPoints(Point p1, Point p2)
     {
         ArrayList<Point> points = new ArrayList<Point>();
 
@@ -424,92 +503,4 @@ public class Board extends JPanel implements ActionListener {
 
         return points;
     }*/
-
-    private class MAdapter extends MouseAdapter {
-
-        @Override
-        public void mousePressed(MouseEvent e) {
-
-            for(Planet planet : planets){
-                Rectangle hitBox = planet.getBounds();
-                if(hitBox.contains(e.getX(), e.getY())) {
-                    if (spaceship != null){
-                        if (spaceship.finish == null) {
-                            if (spaceship.start != planet) {
-                                if (planet.addUfo(spaceship)) {
-                                    if (spaceship.start != null) {
-                                        spaceship.takeOff();
-                                    }
-                                    spaceship.finish = planet;
-                                    distance = spaceship.distance() + "";
-                                    mousePoint = e.getPoint();
-                                    double dx = e.getX() - spaceship.getX();
-                                    double dy = e.getY() - spaceship.getY();
-                                    imageAngleRad = Math.atan2(dy, dx);
-                                    repaint();
-                                }
-                            }
-                        }
-                }else {
-                        System.out.println("Select a ship first!");
-                     //drawErrorSelectShip();
-                }
-                }
-
-            }
-
-            for(SpaceShip spaceShip: spaceships){
-                Rectangle hitBox = spaceShip.getBounds();
-                if(hitBox.contains(e.getX(), e.getY())) {
-                    if(spaceship==null) {
-                        spaceship = spaceShip;
-                    }else if(spaceship.finish==null) {
-                            spaceship = spaceShip;
-                            //spaceShip = spaceship;
-                        }
-                    }
-
-                }
-
-
-
-        }
-
-    }
-
-    private class TAdapter extends KeyAdapter {
-
-        @Override
-        public void keyReleased(KeyEvent e) {
-            if(spaceship!=null) {
-                spaceship.keyReleased(e);
-            }
-        }
-
-        @Override
-        public void keyPressed(KeyEvent e) {
-
-            int key = e.getKeyCode();
-            if (key == KeyEvent.VK_ESCAPE) {
-                if (spaceship != null) {
-                    if (!spaceship.inSpace) {
-                        spaceship.takeOff();
-                    } else {
-                        if(spaceship.finish!=null) {
-                            spaceship.finish.removeUfo(spaceship);
-                        }
-                        spaceship.finish=null;
-                        spaceship=null;
-                    }
-
-                }else{
-                        System.exit(0);
-
-                }
-            }
-            if(spaceship!=null) {
-                spaceship.keyPressed(e);
-            }
-        }
-    }
 }
