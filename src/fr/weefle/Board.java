@@ -10,28 +10,40 @@ import javax.swing.*;
 
 public class Board extends JPanel implements ActionListener {
 
+    private JPopupMenu popupMenu;
     private Timer timer;
     public static SpaceShip spaceship;
     private List<SpaceShip> spaceships;
     private List<Alien> aliens;
     private List<Planet> planets;
     private Image bg;
-    private boolean ingame;
     private final int B_WIDTH = 1920;
     private final int B_HEIGHT = 1080;
+    private Rectangle playButton = new Rectangle(B_WIDTH/2-50,500,100,50);
+    private Rectangle quitButton = new Rectangle(B_WIDTH/2-50,600,100,50);
     private final int DELAY = 1;
     private int low = 5;
     private int high = 10;
     private int low1 = 3;
     private int high1 = 6;
     private Point mousePoint;
+    private Point mousePopup;
     private double imageAngleRad = 0;
+    private boolean inGame = false;
     private int nb_aliens = new Random().nextInt(high - low) + low;
     private int nb_planets = new Random().nextInt(high1 - low1) + low1;
     private String distance="";
-
+    public static AudioPlayer player = null;
     private final int[][] pos = new int[nb_aliens][2];
     private final int[][] pos2 = new int[nb_planets][2];
+
+    private enum STATE{
+        MENU,
+        GAME,
+        ENDGAME
+    }
+
+    private STATE State = STATE.MENU;
 
     public Board() {
 
@@ -44,7 +56,6 @@ public class Board extends JPanel implements ActionListener {
         addMouseListener(new MAdapter());
         setFocusable(true);
         setBackground(Color.BLACK);
-        ingame = true;
 
         setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
 
@@ -102,23 +113,68 @@ public class Board extends JPanel implements ActionListener {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        if (ingame) {
+        if (State == STATE.GAME) {
 
-            drawObjects(g);
+            if(!inGame){
+                createPopupMenu();
+                inGame=true;
+                player.stop();
+                String audioFilePath = "src/resources/game_theme.wav";
+                player = new AudioPlayer(audioFilePath);
+                player.loop();
+            }
 
-        } else {
+            drawGame(g);
 
+        } else if(State == STATE.ENDGAME){
+
+            inGame=false;
             drawGameOver(g);
-            Main.player.stop();
+            player.stop();
             String audioFilePath = "src/resources/game_over.wav";
             AudioPlayer player = new AudioPlayer(audioFilePath);
             player.play();
+        }else if(State == STATE.MENU){
+            if(player==null) {
+                String audioFilePath = "src/resources/menu.wav";
+                player = new AudioPlayer(audioFilePath);
+                player.loop();
+            }
+            drawMenu(g);
         }
 
         Toolkit.getDefaultToolkit().sync();
     }
 
-    private void drawObjects(Graphics g) {
+    private void drawMenu(Graphics g) {
+
+        Graphics2D g2d = (Graphics2D) g;
+
+        ImageIcon j = new ImageIcon("src/resources/space.png");
+        bg = j.getImage();
+        g.drawImage(bg, 0, 0, null);
+        String msg = "Space Conquest";
+        Font small = new Font("Helvetica", Font.BOLD, 100);
+        FontMetrics fm = getFontMetrics(small);
+
+        g.setColor(Color.white);
+        g.setFont(small);
+        g.drawString(msg, (B_WIDTH - fm.stringWidth(msg)) / 2, 400);
+        Font font = new Font("arial", Font.BOLD, 30);
+        g.setFont(font);
+        g.drawString("Play", playButton.x+20, playButton.y+30);
+        g.drawString("Quit", quitButton.x+20, quitButton.y+30);
+        g2d.draw(playButton);
+        g2d.draw(quitButton);
+        for (SpaceShip spaceShip : spaceships) {
+            if (spaceShip.isVisible()) {
+                g.drawImage(spaceShip.getImage(), spaceShip.getX(), spaceShip.getY(), this);
+            }
+        }
+
+    }
+
+    private void drawGame(Graphics g) {
 
         ImageIcon j = new ImageIcon("src/resources/space.png");
         bg = j.getImage();
@@ -175,6 +231,9 @@ public class Board extends JPanel implements ActionListener {
                     g2d.translate(-cx, -cy);
                     g2d.drawImage(spaceship.getImage(), 0, 0, null);
                     g2d.setTransform(oldAT);
+                    if(mousePoint!=null){
+                        g2d.drawLine(spaceship.getX() + spaceship.getImage().getWidth(null)/2, spaceship.getY() + spaceship.getImage().getHeight(null)/2, (int) mousePoint.getX(), (int) mousePoint.getY());
+                    }
                 }
             }
         }
@@ -223,10 +282,10 @@ public class Board extends JPanel implements ActionListener {
                 int centerY = spaceship.y + (spaceship.getImage().getHeight(null) / 2);
 
                 if (mousePoint.x != centerX) {
-                    spaceship.x += mousePoint.x < centerX ? -1 : 1;
+                    spaceship.x += mousePoint.x < centerX ? -5 : 5;
                 }
                 if (mousePoint.y != centerY) {
-                    spaceship.y += mousePoint.y < centerY ? -1 : 1;
+                    spaceship.y += mousePoint.y < centerY ? -5 : 5;
                 }
             }
         }
@@ -236,7 +295,7 @@ public class Board extends JPanel implements ActionListener {
 
     private void inGame() {
 
-        if (!ingame) {
+        if (State==STATE.ENDGAME) {
             timer.stop();
         }
     }
@@ -287,7 +346,7 @@ public class Board extends JPanel implements ActionListener {
 
         if (aliens.isEmpty()) {
 
-            ingame = false;
+            State = STATE.ENDGAME;
             return;
         }
 
@@ -363,16 +422,81 @@ public class Board extends JPanel implements ActionListener {
         }
     }
     }
+    private void createPopupMenu() {
+
+        popupMenu = new JPopupMenu();
+
+        ImageIcon iconSpaceShip = new ImageIcon("src/resources/spaceship.png");
+        ImageIcon iconPlanet = new ImageIcon("src/resources/planet.png");
+        ImageIcon iconAlien = new ImageIcon("src/resources/alien.png");
+
+        JMenuItem addSpaceShipMenuItem = new JMenuItem(new MenuItemAction("Add SpaceShip", iconSpaceShip));
+        addSpaceShipMenuItem.addActionListener((e) -> {
+            spaceships.add(new SpaceShip(mousePopup.x, mousePopup.y));
+        });
+
+        popupMenu.add(addSpaceShipMenuItem);
+
+        JMenuItem addPlanetMenuItem = new JMenuItem(new MenuItemAction("Add Planet", iconPlanet));
+        addPlanetMenuItem.addActionListener((e) -> {
+            planets.add(new Planet(mousePopup.x, mousePopup.y));
+        });
+
+        popupMenu.add(addPlanetMenuItem);
+
+        JMenuItem addAlienMenuItem = new JMenuItem(new MenuItemAction("Add Alien", iconAlien));
+        addAlienMenuItem.addActionListener((e) -> {
+            aliens.add(new Alien(mousePopup.x, mousePopup.y));
+        });
+
+        popupMenu.add(addAlienMenuItem);
+
+
+
+        JMenuItem quitMenuItem = new JMenuItem("Quit");
+        quitMenuItem.addActionListener((e) -> System.exit(0));
+
+        popupMenu.add(quitMenuItem);
+
+        addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+                mousePopup = e.getPoint();
+
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    popupMenu.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
+    }
+
+    private class MenuItemAction extends AbstractAction {
+
+        public MenuItemAction(String text, ImageIcon icon) {
+            super(text);
+
+            putValue(SMALL_ICON, icon);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+        }
+    }
 
     private class MAdapter extends MouseAdapter {
 
         @Override
         public void mousePressed(MouseEvent e) {
 
-            for(Planet planet : planets){
+            if(State==STATE.GAME){
+
+            for(Planet planet : planets) {
                 Rectangle hitBox = planet.getBounds();
-                if(hitBox.contains(e.getX(), e.getY())) {
-                    if (spaceship != null){
+                if (hitBox.contains(e.getX(), e.getY())) {
+                    if (spaceship != null) {
                         if (spaceship.finish == null) {
                             if (spaceship.start != planet) {
                                 if (planet.addUfo(spaceship)) {
@@ -389,7 +513,7 @@ public class Board extends JPanel implements ActionListener {
                                 }
                             }
                         }
-                }
+                    }
                 }
 
             }
@@ -408,6 +532,17 @@ public class Board extends JPanel implements ActionListener {
 
 
 
+        } else if(State==STATE.MENU){
+
+                if (playButton.contains(e.getX(), e.getY())) {
+
+                    State = STATE.GAME;
+
+                }else if(quitButton.contains(e.getX(), e.getY())){
+                    System.exit(0);
+                }
+
+            }
         }
 
     }

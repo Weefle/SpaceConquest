@@ -1,15 +1,14 @@
 package fr.weefle;
 
 import java.awt.EventQueue;
-import javax.swing.JFrame;
+import javax.swing.*;
 
 public class Main extends JFrame {
-
-    public static AudioPlayer player;
 
     public Main() {
 
         initUI();
+
     }
 
     private void initUI() {
@@ -21,9 +20,6 @@ public class Main extends JFrame {
         setResizable(false);
         pack();
 
-        String audioFilePath = "src/resources/game_theme.wav";
-        player = new AudioPlayer(audioFilePath);
-        player.loop();
         setTitle("SpaceConquest");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
