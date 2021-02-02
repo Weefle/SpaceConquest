@@ -31,14 +31,6 @@ public class SpaceShip extends Sprite {
         return this.dy;
     }
 
-    public void setDirX(int dirX){
-        this.dx = dirX;
-    }
-
-    public void setDirY(int dirY){
-        this.dy = dirY;
-    }
-
     private void initCraft() {
 
         rockets = new ArrayList<>();
