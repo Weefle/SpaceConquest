@@ -1,11 +1,15 @@
 package fr.weefle;
 
+import com.sun.javafx.geom.Vec2d;
+import com.sun.javafx.geom.Vec2f;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Vector;
 import javax.swing.*;
 
 public class Board extends JPanel implements ActionListener {
@@ -32,7 +36,6 @@ public class Board extends JPanel implements ActionListener {
     private boolean inGame = false;
     private int nb_aliens = new Random().nextInt(high - low) + low;
     private int nb_planets = new Random().nextInt(high1 - low1) + low1;
-    private String distance="";
     public static AudioPlayer player = null;
     private final int[][] pos = new int[nb_aliens][2];
     private final int[][] pos2 = new int[nb_planets][2];
@@ -235,6 +238,8 @@ public class Board extends JPanel implements ActionListener {
                     g2d.setTransform(oldAT);
                     if(mousePoint!=null){
                         g2d.drawLine(spaceship.getX() + spaceship.getImage().getWidth(null)/2, spaceship.getY() + spaceship.getImage().getHeight(null)/2, (int) mousePoint.getX(), (int) mousePoint.getY());
+                        g.setColor(Color.WHITE);
+                        g.drawString( ""+spaceship.distance(), spaceship.getX() + spaceship.getImage().getWidth(null)/2-10, spaceship.getY() + spaceship.getImage().getHeight(null)+10);
                     }
                 }
             }
@@ -251,7 +256,6 @@ public class Board extends JPanel implements ActionListener {
 
         g.setColor(Color.WHITE);
         g.drawString("Aliens left: " + aliens.size(), 5, 15);
-        g.drawString("Distance: " + distance, 100, 15);
     }
 
     private void drawGameOver(Graphics g) {
@@ -284,10 +288,10 @@ public class Board extends JPanel implements ActionListener {
                 int centerY = spaceship.y + (spaceship.getImage().getHeight(null) / 2);
 
                 if (mousePoint.x != centerX) {
-                    spaceship.x += mousePoint.x < centerX ? -5 : 5;
+                    spaceship.x += 5*Math.cos(imageAngleRad);
                 }
                 if (mousePoint.y != centerY) {
-                    spaceship.y += mousePoint.y < centerY ? -5 : 5;
+                    spaceship.y += 5*Math.sin(imageAngleRad);
                 }
             }
         }
@@ -534,7 +538,6 @@ public class Board extends JPanel implements ActionListener {
                                         spaceship.takeOff();
                                     }
                                     spaceship.finish = planet;
-                                    distance = spaceship.distance() + "";
                                     mousePoint = e.getPoint();
                                     double dx = e.getX() - spaceship.getX();
                                     double dy = e.getY() - spaceship.getY();
