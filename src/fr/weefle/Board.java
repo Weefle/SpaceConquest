@@ -595,9 +595,7 @@ public class Board extends JPanel implements ActionListener {
             int key = e.getKeyCode();
             if (key == KeyEvent.VK_ESCAPE) {
                 if (spaceship != null) {
-                    if (!spaceship.inSpace) {
-                        spaceship.takeOff();
-                    } else {
+                    if (spaceship.inSpace)  {
                         if(spaceship.finish!=null) {
                             spaceship.finish.removeUfo(spaceship);
                         }
