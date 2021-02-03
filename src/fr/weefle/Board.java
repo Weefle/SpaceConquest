@@ -100,12 +100,13 @@ public class Board extends JPanel implements ActionListener {
         planets = new ArrayList<>();
 
         for (int[] p : pos2) {
-            p[0] = new Random().nextInt(1920);
-            p[1] = new Random().nextInt(1080);
+                p[0] = new Random().nextInt(1920);
+                p[1] = new Random().nextInt(1080);
         }
 
         for (int[] p : pos2) {
-            planets.add(new Planet(p[0], p[1]));
+            int random = new Random().nextInt(6)+1;
+            planets.add(new Planet(p[0], p[1], random));
         }
     }
 
@@ -213,6 +214,7 @@ public class Board extends JPanel implements ActionListener {
             if (spaceship.isVisible()) {
                 if (!spaceship.inSpace) {
                     g.drawImage(spaceship.getImage(), spaceship.getX(), spaceship.getY(), this);
+                    g.drawRect(spaceship.getX(), spaceship.getY(), spaceship.getImage().getWidth(null), spaceship.getImage().getHeight(null));
                 } else {
                     Graphics2D g2d = (Graphics2D) g;
                     g2d.setRenderingHint(
@@ -382,6 +384,25 @@ public class Board extends JPanel implements ActionListener {
                 ingame = false;
             }
         }*/
+            List<Rocket> ms = spaceship.getRockets();
+
+            for (Rocket m : ms) {
+
+                Rectangle r1 = m.getBounds();
+
+                for (Alien alien : aliens) {
+
+                    Rectangle r2 = alien.getBounds();
+
+                    if (r1.intersects(r2)) {
+                        m.setVisible(false);
+                        alien.setVisible(false);
+                        String audioFilePath = "src/resources/explosion.wav";
+                        AudioPlayer player = new AudioPlayer(audioFilePath);
+                        player.play();
+                    }
+                }
+            }
 
         for (Planet planet : planets) {
             Rectangle r2 = planet.getBounds();
@@ -393,6 +414,7 @@ public class Board extends JPanel implements ActionListener {
                             spaceship.x = dock.getX();
                             spaceship.y = dock.getY();
                             mousePoint = null;
+                            spaceship=null;
                         }
                     }
 
@@ -401,25 +423,6 @@ public class Board extends JPanel implements ActionListener {
             }
         }
 
-        List<Rocket> ms = spaceship.getRockets();
-
-        for (Rocket m : ms) {
-
-            Rectangle r1 = m.getBounds();
-
-            for (Alien alien : aliens) {
-
-                Rectangle r2 = alien.getBounds();
-
-                if (r1.intersects(r2)) {
-                    m.setVisible(false);
-                    alien.setVisible(false);
-                    String audioFilePath = "src/resources/explosion.wav";
-                    AudioPlayer player = new AudioPlayer(audioFilePath);
-                    player.play();
-                }
-            }
-        }
     }
     }
     private void createPopupMenu() {
@@ -429,6 +432,7 @@ public class Board extends JPanel implements ActionListener {
         ImageIcon iconSpaceShip = new ImageIcon("src/resources/spaceship.png");
         ImageIcon iconPlanet = new ImageIcon("src/resources/planet.png");
         ImageIcon iconAlien = new ImageIcon("src/resources/alien.png");
+        ImageIcon iconSpaceStation = new ImageIcon("src/resources/space_station.png");
 
         JMenuItem addSpaceShipMenuItem = new JMenuItem(new MenuItemAction("Add SpaceShip", iconSpaceShip));
         addSpaceShipMenuItem.addActionListener((e) -> {
@@ -439,7 +443,33 @@ public class Board extends JPanel implements ActionListener {
 
         JMenuItem addPlanetMenuItem = new JMenuItem(new MenuItemAction("Add Planet", iconPlanet));
         addPlanetMenuItem.addActionListener((e) -> {
-            planets.add(new Planet(mousePopup.x, mousePopup.y));
+            //planets.add(new Planet(mousePopup.x, mousePopup.y));
+            String s = (String)JOptionPane.showInputDialog(
+                    this,
+                    "Enter a number:\n",
+                    "How many space station?",
+                    JOptionPane.PLAIN_MESSAGE,
+                    iconSpaceStation,
+                    null,
+                    null);
+            //If a string was returned, say so.
+            if ((s != null) && (s.length() > 0)) {
+                if(Integer.valueOf(s) instanceof Integer){
+
+                    int value = Integer.valueOf(s);
+
+                    if(value<=5 && value>0) {
+
+                        planets.add(new Planet(mousePopup.x, mousePopup.y, value));
+
+                    }else{
+                        JOptionPane.showMessageDialog(this, "Le nombre " + value + " n'est pas compris entre 1 et 5 !\nIl y a donc 3 stations par defaut.");
+                        planets.add(new Planet(mousePopup.x, mousePopup.y, 3));
+                    }
+
+                }
+            }
+
         });
 
         popupMenu.add(addPlanetMenuItem);
@@ -522,6 +552,9 @@ public class Board extends JPanel implements ActionListener {
                 Rectangle hitBox = spaceShip.getBounds();
                 if(hitBox.contains(e.getX(), e.getY())) {
                     if(spaceship==null) {
+                        if (!spaceShip.inSpace) {
+                            spaceShip.takeOff();
+                        }
                         spaceship = spaceShip;
                     }else if(spaceship.finish==null) {
                             spaceship = spaceShip;
@@ -583,59 +616,4 @@ public class Board extends JPanel implements ActionListener {
             }
         }
     }
-        /*public ArrayList<Point> getPoints(Point p1, Point p2)
-    {
-        ArrayList<Point> points = new ArrayList<Point>();
-
-        // no slope (vertical line)
-        if (p1.getX() == p2.getX())
-        {
-            for (double y = p1.getY(); y <= p2.getY(); y++)
-            {
-                Point p = new Point((int)p1.getX(), (int)y);
-                points.add(p);
-            }
-        }
-        else
-        {
-            // swap p1 and p2 if p2.X < p1.X
-            if (p2.getX() < p1.getX())
-            {
-                Point temp = p1;
-                p1 = p2;
-                p2 = temp;
-            }
-
-            double deltaX = p2.getX() - p1.getX();
-            double deltaY = p2.getY() - p1.getY();
-            double error = -1.0f;
-            double deltaErr = Math.abs(deltaY / deltaX);
-
-            double y = p1.getY();
-            for (double x = p1.getX(); x <= p2.getX(); x++)
-            {
-                Point p = new Point((int)x, (int)y);
-                points.add(p);
-                //System.out.println("Added Point: " + p.getX() + "," + p.getY());
-
-                error += deltaErr;
-                //System.out.println("Error is now: " + error);
-
-                while (error >= 0.0f)
-                {
-                    //System.out.println("   Moving Y to " + y);
-                    y++;
-                    points.add(new Point((int)x, (int)y));
-                    error -= 1.0f;
-                }
-            }
-
-            if (!points.get(points.size()-1).equals(p2))
-            {
-                points.remove(points.get(points.size()-1));
-            }
-        }
-
-        return points;
-    }*/
 }

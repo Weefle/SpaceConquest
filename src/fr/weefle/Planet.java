@@ -1,23 +1,63 @@
 package fr.weefle;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 
 public class Planet extends Sprite {
 
     ArrayList<Dock> docks = new ArrayList<Dock>() ;
 
-    public Planet(int x, int y) {
+    public Planet(int x, int y, int nbStation) {
         super(x, y);
-        Dock dock1 = new Dock(x+100, y+100) ;
-        Dock dock2 = new Dock(x, y+100);
-        Dock dock3 = new Dock(x+100, y);
-        Dock dock4 = new Dock(x, y);
-        this.docks.add(dock1);
-        this.docks.add(dock2);
-        this.docks.add(dock3);
-        this.docks.add(dock4);
+
+        Dock dock1, dock2, dock3, dock4, dock5;
+
+        if(nbStation<=5 && nbStation>0) {
+
+            if (nbStation == 1) {
+                dock1 = new Dock(x + 100, y + 100);
+                this.docks.add(dock1);
+            } else if (nbStation == 2) {
+                dock1 = new Dock(x + 100, y + 100);
+                dock2 = new Dock(x, y + 100);
+                this.docks.add(dock1);
+                this.docks.add(dock2);
+            } else if (nbStation == 3) {
+                dock1 = new Dock(x + 100, y + 100);
+                dock2 = new Dock(x, y + 100);
+                dock3 = new Dock(x + 100, y);
+                this.docks.add(dock1);
+                this.docks.add(dock2);
+                this.docks.add(dock3);
+            } else if (nbStation == 4) {
+                dock1 = new Dock(x + 100, y + 100);
+                dock2 = new Dock(x, y + 100);
+                dock3 = new Dock(x + 100, y);
+                dock4 = new Dock(x, y);
+                this.docks.add(dock1);
+                this.docks.add(dock2);
+                this.docks.add(dock3);
+                this.docks.add(dock4);
+            } else if (nbStation == 5) {
+                dock1 = new Dock(x + 100, y + 100);
+                dock2 = new Dock(x, y + 100);
+                dock3 = new Dock(x + 100, y);
+                dock4 = new Dock(x, y);
+                dock5 = new Dock(x + 50, y + 50);
+                this.docks.add(dock1);
+                this.docks.add(dock2);
+                this.docks.add(dock3);
+                this.docks.add(dock4);
+                this.docks.add(dock5);
+            }
+        }else{
+            dock1 = new Dock(x + 100, y + 100);
+            dock2 = new Dock(x, y + 100);
+            dock3 = new Dock(x + 100, y);
+            this.docks.add(dock1);
+            this.docks.add(dock2);
+            this.docks.add(dock3);
+        }
 
         initPlanet();
     }
