@@ -1,15 +1,11 @@
 package fr.weefle;
 
-import com.sun.javafx.geom.Vec2d;
-import com.sun.javafx.geom.Vec2f;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Vector;
 import javax.swing.*;
 
 public class Board extends JPanel implements ActionListener {
@@ -288,10 +284,10 @@ public class Board extends JPanel implements ActionListener {
                 int centerY = spaceship.y + (spaceship.getImage().getHeight(null) / 2);
 
                 if (mousePoint.x != centerX) {
-                    spaceship.x += 5*Math.cos(imageAngleRad);
+                    spaceship.x += 5*Math.atan(Math.cos(imageAngleRad));
                 }
                 if (mousePoint.y != centerY) {
-                    spaceship.y += 5*Math.sin(imageAngleRad);
+                    spaceship.y += 5*Math.atan(Math.sin(imageAngleRad));
                 }
             }
         }
