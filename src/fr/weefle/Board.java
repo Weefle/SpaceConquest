@@ -283,11 +283,15 @@ public class Board extends JPanel implements ActionListener {
                 int centerX = spaceship.x + (spaceship.getImage().getWidth(null) / 2);
                 int centerY = spaceship.y + (spaceship.getImage().getHeight(null) / 2);
 
+                double dx = mousePoint.x - spaceship.getX();
+                double dy = mousePoint.y - spaceship.getY();
+                imageAngleRad = Math.atan2(dy, dx);
+
                 if (mousePoint.x != centerX) {
-                    spaceship.x += mousePoint.x < centerX ? -1 : 1;
+                    spaceship.x += mousePoint.x < centerX ? 5*Math.atan(Math.cos(imageAngleRad)) : 5*Math.atan(Math.cos(imageAngleRad));
                 }
                 if (mousePoint.y != centerY) {
-                    spaceship.y += mousePoint.y < centerY ? -1 : 1;
+                    spaceship.y += mousePoint.y < centerY ? 5*Math.atan(Math.sin(imageAngleRad)) : 5*Math.atan(Math.sin(imageAngleRad));
                 }
             }
         }
@@ -535,9 +539,6 @@ public class Board extends JPanel implements ActionListener {
                                     }
                                     spaceship.finish = planet;
                                     mousePoint = e.getPoint();
-                                    double dx = e.getX() - spaceship.getX();
-                                    double dy = e.getY() - spaceship.getY();
-                                    imageAngleRad = Math.atan2(dy, dx);
                                     repaint();
                                 }
                             }
