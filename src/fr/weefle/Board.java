@@ -284,10 +284,10 @@ public class Board extends JPanel implements ActionListener {
                 int centerY = spaceship.y + (spaceship.getImage().getHeight(null) / 2);
 
                 if (mousePoint.x != centerX) {
-                    spaceship.x += 5*Math.atan(Math.cos(imageAngleRad));
+                    spaceship.x += mousePoint.x < centerX ? -1 : 1;
                 }
                 if (mousePoint.y != centerY) {
-                    spaceship.y += 5*Math.atan(Math.sin(imageAngleRad));
+                    spaceship.y += mousePoint.y < centerY ? -1 : 1;
                 }
             }
         }
@@ -594,7 +594,9 @@ public class Board extends JPanel implements ActionListener {
             int key = e.getKeyCode();
             if (key == KeyEvent.VK_ESCAPE) {
                 if (spaceship != null) {
-                    if (spaceship.inSpace)  {
+                    if (!spaceship.inSpace) {
+                        spaceship.takeOff();
+                    } else {
                         if(spaceship.finish!=null) {
                             spaceship.finish.removeUfo(spaceship);
                         }
