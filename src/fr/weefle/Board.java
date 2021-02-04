@@ -419,6 +419,7 @@ public class Board extends JPanel implements ActionListener {
                             spaceship.y = dock.getY();
                             mousePoint = null;
                             spaceship=null;
+                            break;
                         }
                     }
 
